@@ -143,18 +143,52 @@
                 icon: "sizzlejs_32x32.png"
             }];
 
+            //$("#project").autocomplete({
+            //    minLength: 0,
+            //    source: projects,
+            //    focus: function (event, ui) {
+            //        $("#project").val(ui.item.label);
+            //        return false;
+            //    },
+            //    select: function (event, ui) {
+            //        $("#project").val(ui.item.label);
+            //        $("#project-id").val(ui.item.value);
+            //        $("#project-description").html(ui.item.desc);
+            //        $("#project-icon").attr("src", "images/" + ui.item.icon);
+
+            //        return false;
+            //    }
+            //})
+            //    .data("ui-autocomplete")._renderItem = function (ul, item) {
+            //        return $("<li>")
+            //            .data("ui-autocomplete-item", item)
+            //            .append("<a href ='www.google.com' traget ='_blank'> " + item.label + "<br>" + item.desc + "</a>")
+            //            .appendTo(ul);
+            //    };
+
             $("#project").autocomplete({
                 minLength: 0,
-                source: projects,
+                source : function( request, response ) {
+                    $.ajax({
+                        url: "http://jsonplaceholder.typicode.com/posts/1/comments",
+                        dataType: "jsonp",
+                        data: {
+                            q: request.term
+                        },
+                        success: function (data) {
+                            response( data );
+                        }
+                    });
+                },
                 focus: function (event, ui) {
                     $("#project").val(ui.item.label);
                     return false;
                 },
                 select: function (event, ui) {
-                    $("#project").val(ui.item.label);
-                    $("#project-id").val(ui.item.value);
-                    $("#project-description").html(ui.item.desc);
-                    $("#project-icon").attr("src", "images/" + ui.item.icon);
+                    $("#project").val(ui.item.name);
+                    $("#project-id").val(ui.item.email);
+                    //$("#project-description").html(ui.item.desc);
+                    //$("#project-icon").attr("src", "images/" + ui.item.icon);
 
                     return false;
                 }
@@ -162,7 +196,7 @@
                 .data("ui-autocomplete")._renderItem = function (ul, item) {
                     return $("<li>")
                         .data("ui-autocomplete-item", item)
-                        .append("<a href ='www.google.com' traget ='_blank'> " + item.label + "<br>" + item.desc + "</a>")
+                        .append("<a> " + item.name + "<br>" + item.email + "</a>")
                         .appendTo(ul);
                 };
         });
