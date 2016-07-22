@@ -1,0 +1,117 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="http://cdn.datatables.net/1.10.4/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+<script src="http://cdn.datatables.net/1.10.4/js/jquery.dataTables.js" type="text/javascript"></script>
+
+<h2>Query Builder</h2>
+
+<div>
+    <div>
+        <select id="ddlDataBase">
+            <option value="test"> test</option>
+        </select>
+    </div>   <br />
+    <textarea id="txtQuery" rows="4" style="width:100%;max-width: 1000px"></textarea> <br /><br />
+    <input type="button" id="btnExecute" value="Execute" />
+    <button type="button" id="myButton" data-loading-text="Waiting For Rh7edcxesult..." class="btn btn-primary" autocomplete="off">
+        Loading state
+    </button>
+
+    <button id="btnTestLoader" >Loading Image <img src="~/Images/loader.gif" id="imgloader"/> </button>
+    
+    <div id="tabContainer" style="width:100%; height:600px;">
+       
+    </div>
+ 
+
+</div>
+
+
+<script>
+    $(function () {
+        $('#imgloader').hide();
+        $('#btnTestLoader').click(function () {
+            $('#imgloader').show();
+
+            setTimeout(function () {
+                $('#imgloader').hide();
+            }, 5000);
+        });
+
+
+
+    });
+
+    $('#myButton').on('click', function () {
+        debugger;
+       
+        var $btn = $(this).button('loading');
+        setTimeout(function () {
+            $btn.button('reset');
+           }, 5000);
+        // business logic...
+       
+    })
+</script>
+<script type="text/javascript">
+    $(function () {
+        //var dataObject = eval('[{"COLUMNS":[{ "title": "NAME"}, { "title": "COUNTY"}],"DATA":[["John Doe","Fresno"],["Billy","Fresno"],["Tom","Kern"],["King Smith","Kings"]]}]');
+        //var columns = [];
+        //$('#example').dataTable({
+        //    "data": dataObject[0].DATA,
+        //    "columns": dataObject[0].COLUMNS
+        //});
+
+
+        $('#btnExecute').click(function () {
+            debugger;
+            var Data1 = {
+                databaseName: $('#ddlDataBase').val(),
+                query: $('#txtQuery').val()
+            };
+
+
+            $.ajax({
+                type: "GET", 		//GET or POST or PUT or DELETE verb
+                url: "/QueryBuilder/ExecuteQuery", 		// Location of the service
+                data: Data1, 		//Data sent to server
+                contentType: "",		// content type sent to server
+                dataType: "json", 	//Expected data format from server
+                processdata: true, 	//True or False
+                success: function (json) {//On Successful service call
+                    debugger;
+
+                    CreateTable(JSON.parse(json));
+                },
+                error: function (err) {
+                    debugger;
+                },
+            });
+        });
+
+    });
+
+    function CreateTable(data) {
+        debugger;
+        //create tabs
+        $("#tabContainer").html('');
+        for (var i = 0; i < data.length; i++) {
+
+            //create table inside tab
+            $("#tabContainer").append('<table cellpadding="0" cellspacing="0" border="0" class="display" id="' + data[i].tableName + '"></table><br /><br />');
+
+            //bind table
+            var dataObject = data[i];
+            $('#' + dataObject.tableName).dataTable({
+                "data": dataObject.data,
+                "columns": dataObject.columns
+            });
+        }
+
+
+
+    }
+</script>

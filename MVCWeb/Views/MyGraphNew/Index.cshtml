@@ -28,7 +28,34 @@
 
     <script src="http://localhost:42277/Scripts/jquery.simple.timer.js"></script>
 
+    <style>
+        input[type='radio'] {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 1px solid darkgray;
+            border-radius: 50%;
+            outline: none;
+            box-shadow: 0 0 5px 0px gray inset;
+        }
 
+            input[type='radio']:hover {
+                box-shadow: 0 0 5px 0px orange inset;
+            }
+
+            input[type='radio']:before {
+                content: '';
+                display: block;
+                width: 60%;
+                height: 60%;
+                margin: 20% auto;
+                border-radius: 50%;
+            }
+
+            input[type='radio']:checked:before {
+                background: green;
+            }
+    </style>
 </head>
 <body>
     <div style="width: 80%; min-width: 210px;">
@@ -42,6 +69,22 @@
         <input type="hidden" id="project-i" />
     </div><br />
     <div>
+        <input type="text" id="auto" />
+        <img id="loading" style="display:none" src="http://www.exitcertified.com/commonFiles/images/loadingIndicator_2.gif" />
+
+    </div><br />
+    <div>
+        <input type="radio" class="rd1" />
+        <input type="radio" class="rd2" />
+        <input type="radio" class="rd3" />
+        <input type="radio" class="rd4" />
+        <input type="radio" class="rd5" />
+        <input type="radio" class="rd6" /><br />
+        <div> <input type="button" id="btnRdlCountIncrees" value="+" /><input type="button" id="btnRdlCountDecress" value="-" /></div>
+
+    </div><br />
+
+    <div>
         <textarea id="myTa" rows="4" cols="50"></textarea>
         <input type="button" id="btnText" value="Get Text Area Value" /><br />
     </div><br />
@@ -50,7 +93,7 @@
         <input type="button" id="btncheck" value="Clear Timer" /><br />
     </div><br />
     <h4>Static CountDown Timer</h4>
-    <div >
+    <div>
         <div>
             <div id="countdown"></div>
         </div>
@@ -199,12 +242,68 @@
                     return false;
                 }
             })
+
                 .data("ui-autocomplete")._renderItem = function (ul, item) {
                     return $("<li>")
-                        .data("ui-autocomplete-item", item)
-                        .append("<a> " + item.name + "<br>" + item.email + "</a>")
-                        .appendTo(ul);
+
+                    //.data("ui-autocomplete-item", item)
+                    //.append("<a> " + item.name + "<br>" + item.email + "</a>")
+                    //.appendTo(ul);
                 };
+
+
+            $("#auto").autocomplete({
+                source: function (request, response) {
+                    $("#loading").show();
+                    console.log(request);
+
+                    $.ajax({
+                        url: "http://52.77.213.22:9135/w1/hospitalquery?lquery=" + request.term,
+
+                        jsonp: "json",
+                        dataType: "json",
+                        success: function (data) {
+
+                            response($.map(data, function (el, index) {
+                                return el.Hospital_Name + " ( " + el.Location +" )";
+                            }));
+                            $("#loading").hide();
+                        },
+                        error: function () {
+
+
+                            $("#loading").hide();
+                        }
+                    });
+                }
+            });
+
+            //$("#auto").autocomplete({
+            //    source: function (request, response) {
+            //        $("#loading").show();
+
+            //        $.ajax({
+            //            url: "http://api.stackoverflow.com/1.1/users",
+            //            data: {
+            //                filter: request.term,
+            //                pagesize: 10
+            //            },
+            //            jsonp: "jsonp",
+            //            dataType: "jsonp",
+            //            success: function (data) {
+            //                debugger;
+            //                response($.map(data.users, function (el, index) {
+            //                    return el.display_name;
+            //                }));
+            //                $("#loading").hide();
+            //            },
+            //            error: function (err) {
+            //                debugger;
+            //                $("#loading").hide();
+            //            }
+            //        });
+            //    }
+            //});
         });
     </script>
 
@@ -413,7 +512,7 @@
                 },
 
                 _drawCountdownLabel: function (secondsElapsed) {
-                    console.log(secondsElapsed);
+                    //console.log(secondsElapsed);
 
                     this.ariaText.text(secondsLeft);
                     this.pen.font = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily;
@@ -537,7 +636,7 @@
             debugger;
             var i;
 
-            for (i = 1; i <= 5 ; i++) {
+            for (i = 1; i <= 1 ; i++) {
                 var timerHtml = '';
                 var countDId = 'countdown_' + i;
                 var btnstartTimer = "btnStartTimer_" + i;
@@ -549,10 +648,10 @@
                 timerHtml += ' <input type="button" value="Start Timer ' + i + '" id="' + btnstartTimer + '" />';
                 timerHtml += ' <input type="button" value="Reset Timer ' + i + '" id="' + btnresetTimer + '" />';
                 $('#timerContainer').append(timerHtml);
-                
-                var a = '<script> var totattimeinsec' + i + ';  var fillStylenew' + i + ' = "#8ac575"; var countdown' + i +';   var flag' + i + ' = false; ' +
-                ' function myTimer' + i + '() { ' +
-                ' var timer' + i + ' = "02:10";   timer' + i + ' = timer' + i + '.split(":");  var totattimeinsec' + i + ' = (parseInt(timer' + i + '[0] * 60)) + parseInt(timer' + i + '[1]); '+
+
+                var a = '<script>$(function(){ var totattimeinsec' + i + ';  var fillStylenew' + i + ' = "#8ac575"; var countdown' + i + ';   var flag' + i + ' = false; ' +
+                //' function myTimer' + i + '() { ' +
+                ' var timer' + i + ' = "02:10";   timer' + i + ' = timer' + i + '.split(":");  var totattimeinsec' + i + ' = (parseInt(timer' + i + '[0] * 60)) + parseInt(timer' + i + '[1]); ' +
                 ' var pluginName' + i + ' = "countdown360", defaults = { radius: 15.5, strokeStyle: "#477050", strokeWidth: undefined, fillStyle: fillStylenew' + i + ', fontColor: "#477050", fontFamily: "sans-serif", fontSize: undefined, fontWeight: 700, ' +
                 ' autostart: false, seconds: parseInt(totattimeinsec' + i + '), label: ["second", "seconds"], startOverAfterAdding: true, onComplete: undefined }; ' +
 
@@ -582,7 +681,7 @@
 
                ' _secondsLeft: function (secondsElapsed) { return this.settings.seconds - secondsElapsed;     }, ' +
 
-               ' _drawCountdownLabel: function (secondsElapsed) {  console.log(secondsElapsed);  this.ariaText.text(secondsLeft); this.pen.font = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily; ' +
+               ' _drawCountdownLabel: function (secondsElapsed) {  this.ariaText.text(secondsLeft); this.pen.font = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily; ' +
                ' var secondsLeft = this._secondsLeft(secondsElapsed), label = secondsLeft === 1 ? this.settings.label[0] : this.settings.label[1], drawLabel = this.settings.label && this.settings.label.length === 2, ' +
                ' x = this.settings.width / 2;     if (drawLabel) { y = this.settings.height / 2 - (this.settings.fontSize / 6.2);       } else {y = this.settings.height / 2;} this.pen.fillStyle = this.settings.fillStyle; ' +
                ' this.pen.fillText(secondsLeft + 1, x, y);   this.pen.fillStyle = this.settings.fontColor; this.pen.fillText(secondsLeft, x, y);if (secondsLeft == 40) { fillStylenew' + i + ' = "#867474"; } ' +
@@ -599,11 +698,12 @@
                ' $.fn[pluginName' + i + '] = function (options) { var plugin; this.each(function () {  plugin = $.data(this, "plugin_" + pluginName' + i + ');  if (!plugin) {plugin = new Plugin(this, options); $.data(this, "plugin_" + pluginName' + i + ', plugin); ' +
                ' }  });  return plugin; }; ' +
                ' countdown' + i + '  = $("#' + countDId + '").countdown360({ radius: 60,fontColor: "#FFFFFF", autostart: true,onComplete: function () {  } }); ' +
-               ' } ' +
+               //' } ' +
                 // ' $("body").on("click", "#' + btnresetTimer + '",function () {  countdown' + i + '.stop(); $("#' + countDId + '").css("display", "none");});' +
                 //'$("body").on("click", "#' + btnstartTimer + '", function () {  if (flag' + i + ' == false) { myTimer' + i + '(); flag' + i + ' = true; } else { fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");  }  }); </' + 'script>';
                ' $("#' + btnresetTimer + '").click(function () {  countdown' + i + '.stop(); $("#' + countDId + '").css("display", "none");}); ' +
-               ' $("#' + btnstartTimer + '").click( function () {  if (flag' + i + ' == false) { myTimer' + i + '(); flag' + i + ' = true; } else { fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");  }  }); </' + 'script> ';
+               ' $("#' + btnstartTimer + '").click( function () {   fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");    }); }); </' + 'script> ';
+                // ' $("#' + btnstartTimer + '").click( function () {  if (flag' + i + ' == false) { myTimer' + i + '(); flag' + i + ' = true; } else { fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");  }  }); }); </' + 'script> ';
 
                 $('#timerContainer').append(a);
 
@@ -612,6 +712,74 @@
 
 
     </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
 
+            var count = 1;
+            $('#btnRdlCountDecress').css("display", "none");
+
+            $('.rd1').prop("checked", true);
+            $('#btnRdlCountIncrees').click(function () {
+                count++;
+                if (count == 2) {
+                    $('.rd1,.rd2').prop("checked", true);
+                    // $('rd2').prop("checked", true);
+                    $('#btnRdlCountDecress').css("display", "block");
+                }
+                if (count == 3) {
+                    $('.rd1,.rd2,.rd3').prop("checked", true);
+
+                }
+                if (count == 4) {
+                    $('.rd1,.rd2,.rd3,.rd4').prop("checked", true);
+
+                }
+                if (count == 5) {
+                    $('.rd1,.rd2,.rd3,.rd4,.rd5').prop("checked", true);
+
+                }
+                if (count == 6) {
+                    $('.rd1,.rd2,.rd3,.rd4,.rd5,.rd6').prop("checked", true);
+                    $('#btnRdlCountIncrees').css("display", "none");
+                }
+
+
+            });
+
+
+            $('#btnRdlCountDecress').click(function () {
+                count--;
+                if (count == 1) {
+                    $('.rd2,.rd3,.rd4,.rd5,.rd6').prop("checked", false);
+                    $('#btnRdlCountDecress').css("display", "none");
+                    // $('rd2').prop("checked", true);
+
+                }
+                if (count == 2) {
+                    $('.rd3,.rd4,.rd5,.rd6').prop("checked", false);
+                    // $('rd2').prop("checked", true);
+
+                }
+                if (count == 3) {
+                    $('.rd4,.rd5,.rd6').prop("checked", false);
+
+                }
+                if (count == 4) {
+                    $('.rd5,.rd6').prop("checked", false);
+
+                }
+                if (count == 5) {
+                    $('.rd6').prop("checked", false);
+                    $('#btnRdlCountIncrees').css("display", "block");
+                }
+
+
+
+            });
+
+        });
+
+
+    </script>
 </body>
 </html>

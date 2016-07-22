@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            // alert($('#hdnpagename').val());
+            var divname = getParameterByName("pageId");
+            $('.' + divname).css("display", "block");
+        });
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+    </script>
+</head>
+<body>
+    <div class="home" style="display:none">
+        <hi>Home</hi>
+        <p>Hi This is Home Page</p>
+    </div>
+    <div class="about" style="display:none">
+        <hi>About</hi>
+        <p>Hi This is About Page</p>
+    </div>
+    <div class="contact" style="display:none">
+        <hi>Contact</hi>
+        <p>Hi This is Contact Page</p>
+    </div>
+</body>
+</html>
