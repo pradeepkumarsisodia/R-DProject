@@ -165,8 +165,10 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MyAutoCompleteController.cs" />
     <Compile Include="Controllers\MyGraphController.cs" />
     <Compile Include="Controllers\MyGraphNewController.cs" />
+    <Compile Include="Controllers\MyTimerController.cs" />
     <Compile Include="Controllers\QueryBuilderController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -244,6 +246,8 @@
     <Content Include="Views\MyGraphNew\Index.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\QueryBuilder\Index.cshtml" />
+    <Content Include="Views\MyAutoComplete\Index.cshtml" />
+    <Content Include="Views\MyTimer\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

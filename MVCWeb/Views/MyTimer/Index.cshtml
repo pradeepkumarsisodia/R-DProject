@@ -1,0 +1,402 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script src="http://localhost:42277/Scripts/jquery.simple.timer.js"></script>
+<h2>Timer</h2>
+
+<div>
+    <span id="sp1">02:10</span>
+    <input type="button" id="btncheck" value="Clear Timer" /><br />
+</div><br />
+<h4>Static CountDown Timer</h4>
+<div>
+    <div>
+        <div id="countdown"></div>
+    </div>
+    <input type="button" value="Start Timer" id="btnStartTimer" />
+    <input type="button" value="Reset Timer" id="btnResetTimer" />
+</div><br />
+<h4>Dynamic CountDown Timer</h4>
+<div id="timerContainer">
+
+</div>
+@*Timer and Textarea Selection*@
+<script>
+   
+    $(function () {
+
+        var interval;
+        interval = setInterval(function () {
+
+            var timer = $('#sp1').html();
+            timer = timer.split(':');
+            var minutes = parseInt(timer[0], 10);
+            var seconds = parseInt(timer[1], 10);
+            seconds -= 1;
+            if (minutes < 0) return clearInterval(interval);
+            if (minutes < 10 && minutes.length != 2) minutes = '0' + minutes;
+            if (seconds < 0 && minutes != 0) {
+                minutes -= 1;
+                seconds = 59;
+            }
+            else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+            $('#sp1').html(minutes + ':' + seconds);
+
+
+            if (minutes == 0 && seconds == 0)
+                clearInterval(interval);
+        }, 1000);
+
+
+
+
+        $('#btncheck').click(function () {
+
+
+            clearInterval(interval);
+            $('#sp1').html('2:10');
+            interval = setInterval(function () {
+                var timer = $('#sp1').html();
+                timer = timer.split(':');
+                var minutes = parseInt(timer[0], 10);
+                var seconds = parseInt(timer[1], 10);
+                seconds -= 1;
+                if (minutes < 0) return clearInterval(interval);
+                if (minutes < 10 && minutes.length != 2) minutes = '0' + minutes;
+                if (seconds < 0 && minutes != 0) {
+                    minutes -= 1;
+                    seconds = 59;
+                }
+                else if (seconds < 10 && length.seconds != 2) seconds = '0' + seconds;
+                $('#sp1').html(minutes + ':' + seconds);
+                if (minutes == 0 && seconds == 0)
+                    clearInterval(interval);
+            }, 1000);
+
+
+
+        });
+
+    
+    });
+   
+
+</script>
+
+
+@*Count Down in Seconds*@
+<script type="text/javascript" charset="utf-8">
+        var totattimeinsec;
+        var fillStylenew = "#8ac575";
+        var countdown;
+        var flag = false;
+
+        //(function ($, window, document, undefined) {
+        //$(document).ready(function () {
+        function myTimer() {
+
+
+            // var timer = $('#sp1').html();
+            var timer = "02:10";
+            timer = timer.split(':');
+            totattimeinsec = (parseInt(timer[0] * 60)) + parseInt(timer[1]);
+
+            var pluginName = "countdown360",
+              defaults = {
+                  radius: 15.5,                    // radius of arc
+                  strokeStyle: "#477050",          // the color of the stroke
+                  strokeWidth: undefined,          // the stroke width, dynamically calulated if omitted in options
+                  fillStyle: fillStylenew,            // the fill color
+                  fontColor: "#477050",            // the font color
+                  fontFamily: "sans-serif",        // the font family
+                  fontSize: undefined,             // the font size, dynamically calulated if omitted in options
+                  fontWeight: 700,                 // the font weight
+                  autostart: false,                 // start the countdown automatically
+                  seconds: parseInt(totattimeinsec),                     // the number of seconds to count down
+                  label: ["second", "seconds"],    // the label to use or false if none
+                  startOverAfterAdding: true,      // Start the timer over after time is added with addSeconds
+                  onComplete: undefined
+              };
+
+            function Plugin(element, options) {
+                this.element = element;
+                this.settings = $.extend({}, defaults, options);
+                if (!this.settings.fontSize) { this.settings.fontSize = this.settings.radius / 1.2; }
+                if (!this.settings.strokeWidth) { this.settings.strokeWidth = this.settings.radius / 4; }
+                this._defaults = defaults;
+                this._name = pluginName;
+                this._init();
+            }
+
+            Plugin.prototype = {
+                extendTimer: function (value) {
+                    var seconds = parseInt(value),
+                        secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000);
+                    if ((this._secondsLeft(secondsElapsed) + seconds) <= this.settings.seconds) {
+                        this.startedAt.setSeconds(this.startedAt.getSeconds() + parseInt(value));
+                    }
+                },
+
+                addSeconds: function (value) {
+                    var secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000);
+                    if (this.settings.startOverAfterAdding) {
+                        this.settings.seconds = this._secondsLeft(secondsElapsed) + parseInt(value);
+                        this.start();
+                    } else {
+                        this.settings.seconds += parseInt(value);
+                    }
+                },
+
+                start: function () {
+                    this.startedAt = new Date();
+                    this.interval = setInterval(jQuery.proxy(this._draw, this), 1000);
+                },
+
+                stop: function (cb) {
+                    clearInterval(this.interval);
+                    if (cb) { cb(); }
+                },
+
+                _init: function () {
+                    this.settings.width = (this.settings.radius * 2) + (this.settings.strokeWidth * 2);
+                    this.settings.height = this.settings.width;
+                    this.settings.arcX = this.settings.radius + this.settings.strokeWidth;
+                    this.settings.arcY = this.settings.arcX;
+                    this._initPen(this._getCanvas());
+                    if (this.settings.autostart) { this.start(); }
+
+                    this._drawCountdownShape(Math.PI * 3.5, true);
+                    this._drawCountdownLabel(0);
+                },
+
+                _getCanvas: function () {
+                    var $canvas = $("<canvas id=\"countdown360_" + $(this.element).attr("id") + "\" width=\"" +
+                                    this.settings.width + "\" height=\"" +
+                                    this.settings.height + "\">" +
+                                    "<span id=\"countdown-text\" role=\"status\" aria-live=\"assertive\"></span></canvas>");
+                    $(this.element).prepend($canvas[0]);
+                    return $canvas[0];
+                },
+
+                _initPen: function (canvas) {
+                    this.pen = canvas.getContext("2d");
+                    this.pen.lineWidth = this.settings.strokeWidth;
+                    this.pen.strokeStyle = this.settings.strokeStyle;
+                    this.pen.fillStyle = this.settings.fillStyle;
+                    this.pen.textAlign = "center";
+                    this.pen.textBaseline = "middle";
+                    this.ariaText = $(canvas).children("#countdown-text");
+                    this._clearRect();
+                },
+
+                _clearRect: function () {
+                    this.pen.clearRect(0, 0, this.settings.width, this.settings.height);
+                },
+
+                _secondsLeft: function (secondsElapsed) {
+                    return this.settings.seconds - secondsElapsed;
+                },
+
+                _drawCountdownLabel: function (secondsElapsed) {
+                    //console.log(secondsElapsed);
+
+                    this.ariaText.text(secondsLeft);
+                    this.pen.font = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily;
+                    var secondsLeft = this._secondsLeft(secondsElapsed),
+                        label = secondsLeft === 1 ? this.settings.label[0] : this.settings.label[1],
+                        drawLabel = this.settings.label && this.settings.label.length === 2,
+                        x = this.settings.width / 2;
+                    if (drawLabel) {
+                        y = this.settings.height / 2 - (this.settings.fontSize / 6.2);
+                    } else {
+                        y = this.settings.height / 2;
+                    }
+
+                    this.pen.fillStyle = this.settings.fillStyle; //change color
+                    this.pen.fillText(secondsLeft + 1, x, y);
+                    this.pen.fillStyle = this.settings.fontColor;
+                    this.pen.fillText(secondsLeft, x, y);
+                    if (secondsLeft == 40) {
+                        fillStylenew = '#867474';
+                    }
+                    if (secondsLeft == 120) {
+                        fillStylenew = '#fd1e5a';
+                    }
+                    //if (secondsElapsed == 10) {
+                    //    fillStylenew = '#867474';
+                    //}
+                    //if (secondsElapsed == 30) {
+                    //    fillStylenew = '#fd1e5a';
+                    //}
+                    if (drawLabel) {
+                        this.pen.font = "normal small-caps " + (this.settings.fontSize / 3) + "px " + this.settings.fontFamily;
+                        this.pen.fillText(label, this.settings.width / 2, this.settings.height / 2 + (this.settings.fontSize / 2.2));
+                    }
+                    this.settings.fillStyle = fillStylenew;
+                },
+
+                _drawCountdownShape: function (endAngle, drawStroke) {
+                    this.pen.fillStyle = this.settings.fillStyle;
+                    this.pen.beginPath();
+                    this.pen.arc(this.settings.arcX, this.settings.arcY, this.settings.radius, Math.PI * 1.5, endAngle, false);
+                    this.pen.fill();
+                    if (drawStroke) { this.pen.stroke(); }
+                },
+
+                _draw: function () {
+                    var secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000),
+                        endAngle = (Math.PI * 3.5) - (((Math.PI * 2) / this.settings.seconds) * secondsElapsed);
+                    this._clearRect();
+                    this._drawCountdownShape(Math.PI * 3.5, false);
+                    if (secondsElapsed < this.settings.seconds) {
+                        this._drawCountdownShape(endAngle, true);
+                        this._drawCountdownLabel(secondsElapsed);
+                    } else {
+                        this._drawCountdownLabel(this.settings.seconds);
+                        this.stop();
+                        this.settings.onComplete();
+                    }
+                }
+
+            };
+
+            $.fn[pluginName] = function (options) {
+                var plugin;
+                this.each(function () {
+                    plugin = $.data(this, "plugin_" + pluginName);
+                    if (!plugin) {
+                        plugin = new Plugin(this, options);
+                        $.data(this, "plugin_" + pluginName, plugin);
+                    }
+                });
+                return plugin;
+            };
+
+            debugger;
+
+            countdown = $("#countdown").countdown360({
+                radius: 60,
+                //  seconds: totattimeinsec,
+                fontColor: '#FFFFFF',
+                autostart: true,
+                onComplete: function () { console.log('done') }
+            });
+
+
+
+
+            //})(jQuery, window, document);
+            //});
+        }
+        $('#btnResetTimer').click(function () {
+
+            //countdown.stop();
+            //fillStylenew = "#8ac575";
+            //countdown.start();
+            countdown.stop();
+            $("#countdown").css("display", "none");
+            // countdown = myTimer();
+        });
+
+
+        $('#btnStartTimer').click(function () {
+            if (flag == false) {
+                myTimer();
+                flag = true;
+            }
+            else {
+                //countdown.stop();
+                fillStylenew = "#8ac575";
+                countdown.start();
+                $("#countdown").css("display", "block");
+            }
+
+        });
+</script>
+
+@*Dyanmic Count Down in Seconds*@
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            debugger;
+            var i;
+
+            for (i = 1; i <= 1 ; i++) {
+                var timerHtml = '';
+                var countDId = 'countdown_' + i;
+                var btnstartTimer = "btnStartTimer_" + i;
+                var btnresetTimer = "btnResetTimer_" + i;
+
+                timerHtml += '<div>';
+                timerHtml += '  <div id="' + countDId + '"></div>';
+                timerHtml += ' </div>';
+                timerHtml += ' <input type="button" value="Start Timer ' + i + '" id="' + btnstartTimer + '" />';
+                timerHtml += ' <input type="button" value="Reset Timer ' + i + '" id="' + btnresetTimer + '" />';
+                $('#timerContainer').append(timerHtml);
+
+                var a = '<script>$(function(){ var totattimeinsec' + i + ';  var fillStylenew' + i + ' = "#8ac575"; var countdown' + i + ';   var flag' + i + ' = false; ' +
+                //' function myTimer' + i + '() { ' +
+                ' var timer' + i + ' = "02:10";   timer' + i + ' = timer' + i + '.split(":");  var totattimeinsec' + i + ' = (parseInt(timer' + i + '[0] * 60)) + parseInt(timer' + i + '[1]); ' +
+                ' var pluginName' + i + ' = "countdown360", defaults = { radius: 15.5, strokeStyle: "#477050", strokeWidth: undefined, fillStyle: fillStylenew' + i + ', fontColor: "#477050", fontFamily: "sans-serif", fontSize: undefined, fontWeight: 700, ' +
+                ' autostart: false, seconds: parseInt(totattimeinsec' + i + '), label: ["second", "seconds"], startOverAfterAdding: true, onComplete: undefined }; ' +
+
+               ' function Plugin(element, options) { this.element = element; this.settings = $.extend({}, defaults, options); if (!this.settings.fontSize) { this.settings.fontSize = this.settings.radius / 1.2; } if (!this.settings.strokeWidth) ' +
+               ' { this.settings.strokeWidth = this.settings.radius / 4; } this._defaults = defaults;  this._name = pluginName' + i + ';     this._init(); } ' +
+
+               ' Plugin.prototype = {extendTimer: function (value) { var seconds = parseInt(value), secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000);if ((this._secondsLeft(secondsElapsed) + seconds) <= this.settings.seconds) ' +
+               ' {this.startedAt.setSeconds(this.startedAt.getSeconds() + parseInt(value));} }, ' +
+
+               ' addSeconds: function (value) {var secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000); if (this.settings.startOverAfterAdding) { ' +
+               ' this.settings.seconds = this._secondsLeft(secondsElapsed) + parseInt(value); this.start();} else { this.settings.seconds += parseInt(value); } }, ' +
+
+               ' start: function () {this.startedAt = new Date(); this.interval = setInterval(jQuery.proxy(this._draw, this), 1000); }, ' +
+
+               ' stop: function (cb) { clearInterval(this.interval);if (cb) { cb(); }}, ' +
+
+               ' _init: function () { this.settings.width = (this.settings.radius * 2) + (this.settings.strokeWidth * 2); this.settings.height = this.settings.width; this.settings.arcX = this.settings.radius + this.settings.strokeWidth; ' +
+               ' this.settings.arcY = this.settings.arcX; this._initPen(this._getCanvas()); if (this.settings.autostart) { this.start(); }this._drawCountdownShape(Math.PI * 3.5, true); this._drawCountdownLabel(0);  }, ' +
+
+               ' _getCanvas: function () { var $canvas = $(\'<canvas id="countdown360_\' + $(this.element).attr("id") + \'" width="\'+this.settings.width + \'" height="\'+this.settings.height + \'><span id="countdown-text" role="status" aria-live="assertive"></span></canvas>\'); ' +
+               ' $(this.element).prepend($canvas[0]); return $canvas[0]; }, ' +
+
+               ' _initPen: function (canvas) { this.pen = canvas.getContext("2d");  this.pen.lineWidth = this.settings.strokeWidth;     this.pen.strokeStyle = this.settings.strokeStyle;  this.pen.fillStyle = this.settings.fillStyle; ' +
+               ' this.pen.textAlign = "center"; this.pen.textBaseline = "middle";this.ariaText = $(canvas).children("#countdown-text");    this._clearRect(); }, ' +
+
+               ' _clearRect: function () {this.pen.clearRect(0, 0, this.settings.width, this.settings.height); }, ' +
+
+               ' _secondsLeft: function (secondsElapsed) { return this.settings.seconds - secondsElapsed;     }, ' +
+
+               ' _drawCountdownLabel: function (secondsElapsed) {  this.ariaText.text(secondsLeft); this.pen.font = this.settings.fontWeight + " " + this.settings.fontSize + "px " + this.settings.fontFamily; ' +
+               ' var secondsLeft = this._secondsLeft(secondsElapsed), label = secondsLeft === 1 ? this.settings.label[0] : this.settings.label[1], drawLabel = this.settings.label && this.settings.label.length === 2, ' +
+               ' x = this.settings.width / 2;     if (drawLabel) { y = this.settings.height / 2 - (this.settings.fontSize / 6.2);       } else {y = this.settings.height / 2;} this.pen.fillStyle = this.settings.fillStyle; ' +
+               ' this.pen.fillText(secondsLeft + 1, x, y);   this.pen.fillStyle = this.settings.fontColor; this.pen.fillText(secondsLeft, x, y);if (secondsLeft == 40) { fillStylenew' + i + ' = "#867474"; } ' +
+               ' if (secondsLeft == 120) { fillStylenew' + i + ' = "#fd1e5a";} if (drawLabel) {this.pen.font = "normal small-caps " + (this.settings.fontSize / 3) + "px " + this.settings.fontFamily; ' +
+               ' this.pen.fillText(label, this.settings.width / 2, this.settings.height / 2 + (this.settings.fontSize / 2.2));   }    this.settings.fillStyle = fillStylenew' + i + '; }, ' +
+
+               ' _drawCountdownShape: function (endAngle, drawStroke){this.pen.fillStyle = this.settings.fillStyle; this.pen.beginPath(); this.pen.arc(this.settings.arcX, this.settings.arcY, this.settings.radius, Math.PI * 1.5, endAngle, false); ' +
+               ' this.pen.fill();if (drawStroke) { this.pen.stroke(); }}, ' +
+
+               ' _draw: function () {var secondsElapsed = Math.round((new Date().getTime() - this.startedAt.getTime()) / 1000), endAngle = (Math.PI * 3.5) - (((Math.PI * 2) / this.settings.seconds) * secondsElapsed); this._clearRect(); ' +
+               ' this._drawCountdownShape(Math.PI * 3.5, false); if (secondsElapsed < this.settings.seconds) {this._drawCountdownShape(endAngle, true); this._drawCountdownLabel(secondsElapsed);} else {this._drawCountdownLabel(this.settings.seconds); ' +
+               ' this.stop();this.settings.onComplete(); } }}; ' +
+
+               ' $.fn[pluginName' + i + '] = function (options) { var plugin; this.each(function () {  plugin = $.data(this, "plugin_" + pluginName' + i + ');  if (!plugin) {plugin = new Plugin(this, options); $.data(this, "plugin_" + pluginName' + i + ', plugin); ' +
+               ' }  });  return plugin; }; ' +
+               ' countdown' + i + '  = $("#' + countDId + '").countdown360({ radius: 60,fontColor: "#FFFFFF", autostart: true,onComplete: function () {  } }); ' +
+               //' } ' +
+                // ' $("body").on("click", "#' + btnresetTimer + '",function () {  countdown' + i + '.stop(); $("#' + countDId + '").css("display", "none");});' +
+                //'$("body").on("click", "#' + btnstartTimer + '", function () {  if (flag' + i + ' == false) { myTimer' + i + '(); flag' + i + ' = true; } else { fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");  }  }); </' + 'script>';
+               ' $("#' + btnresetTimer + '").click(function () {  countdown' + i + '.stop(); $("#' + countDId + '").css("display", "none");}); ' +
+               ' $("#' + btnstartTimer + '").click( function () {   fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");    }); }); </' + 'script> ';
+                // ' $("#' + btnstartTimer + '").click( function () {  if (flag' + i + ' == false) { myTimer' + i + '(); flag' + i + ' = true; } else { fillStylenew' + i + '= "#8ac575"; countdown' + i + '.start(); $("#' + countDId + '").css("display", "block");  }  }); }); </' + 'script> ';
+
+                $('#timerContainer').append(a);
+
+            }
+        });
+
+
+</script>

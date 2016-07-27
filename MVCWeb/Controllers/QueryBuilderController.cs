@@ -64,33 +64,41 @@ namespace MVCWeb.Controllers
 
         public JsonResult ExecuteQuery(MyClass objClass)
         {
-            string constr = "Data Source=.;Database=" + objClass.databaseName + ";Integrated Security=SSPI;";
-            SqlConnection con = new SqlConnection(constr);
-            SqlDataAdapter da = new SqlDataAdapter(objClass.query, con);
-            DataSet ds = new DataSet();
-            da.Fill(ds);
-
             var jsonData = "[";
-            if (ds != null && ds.Tables.Count > 0)
+            try
             {
-                
-                var i = 1;
-                foreach (DataTable dt in ds.Tables)
+                string constr = "Data Source=.;Database=" + objClass.databaseName + ";Integrated Security=SSPI;";
+                SqlConnection con = new SqlConnection(constr);
+                SqlDataAdapter da = new SqlDataAdapter(objClass.query, con);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+
+                if (ds != null && ds.Tables.Count > 0)
                 {
 
-                    jsonData += "{";
-                    jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",";
-                    jsonData += "\"columns\":" + GetDataTableColumnsInJSON(dt);
-                    jsonData += ",\"data\":" + GetDataTableDataInJSON(dt);
-                    //jsonData += "\"Details\":" + DataTableToJSON(dt);
-                    if (i < ds.Tables.Count)
-                        jsonData += "},";
-                    else
-                        jsonData += "}";
-                    i++;
+                    var i = 1;
+                    foreach (DataTable dt in ds.Tables)
+                    {
+
+                        jsonData += "{";
+                        jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",";
+                        jsonData += "\"columns\":" + GetDataTableColumnsInJSON(dt);
+                        jsonData += ",\"data\":" + GetDataTableDataInJSON(dt);
+                        //jsonData += "\"Details\":" + DataTableToJSON(dt);
+                        if (i < ds.Tables.Count)
+                            jsonData += "},";
+                        else
+                            jsonData += "}";
+                        i++;
+                    }
                 }
+                jsonData += "]";
             }
-            jsonData += "]";
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return Json(jsonData, JsonRequestBehavior.AllowGet);
         }
 
@@ -124,7 +132,7 @@ namespace MVCWeb.Controllers
             return jsSerializer.Serialize(parentRow);
         }
 
-      
+
     }
 
     public class MyClass

@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="http://localhost:42277/Content/CSS/jquery-ui.css" rel="stylesheet" />
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.min.js"></script>
+<h2>Auto Complete</h2>
+
+<div>
+    <div id="project-label">Select a project (type "j" for a start):</div>
+    <img id="project-icon" src="images/transparent_1x1.png" class="ui-state-default" alt="" />
+    <input id="project" />
+    <input type="hidden" id="project-i" />
+</div><br />
+<div>
+    <input type="text" id="auto" />
+    <img id="loading" style="display:none" src="http://www.exitcertified.com/commonFiles/images/loadingIndicator_2.gif" />
+
+</div><br />
+@*Auto Complete*@
+<script>
+    $(function () {
+        //var projects = [{
+        //    value: "jquery",
+        //    label: "jQuery",
+        //    desc: "the write less, do more, JavaScript library",
+        //    icon: "jquery_32x32.png"
+        //}, {
+        //    value: "jquery-ui",
+        //    label: "jQuery UI",
+        //    desc: "the official user interface library for jQuery",
+        //    icon: "jqueryui_32x32.png"
+        //}, {
+        //    value: "sizzlejs",
+        //    label: "Sizzle JS",
+        //    desc: "a pure-JavaScript CSS selector engine",
+        //    icon: "sizzlejs_32x32.png"
+        //}];
+
+        //$("#project").autocomplete({
+        //    minLength: 0,
+        //    source: projects,
+        //    focus: function (event, ui) {
+        //        $("#project").val(ui.item.label);
+        //        return false;
+        //    },
+        //    select: function (event, ui) {
+        //        $("#project").val(ui.item.label);
+        //        $("#project-id").val(ui.item.value);
+        //        $("#project-description").html(ui.item.desc);
+        //        $("#project-icon").attr("src", "images/" + ui.item.icon);
+
+        //        return false;
+        //    }
+        //})
+        //    .data("ui-autocomplete")._renderItem = function (ul, item) {
+        //        return $("<li>")
+        //            .data("ui-autocomplete-item", item)
+        //            .append("<a href ='www.google.com' traget ='_blank'> " + item.label + "<br>" + item.desc + "</a>")
+        //            .appendTo(ul);
+        //    };
+
+        $("#project").autocomplete({
+            minLength: 0,
+            source: function (request, response) {
+                $.ajax({
+                    url: "http://jsonplaceholder.typicode.com/posts/1/comments",
+                    dataType: "jsonp",
+                    data: {
+                        q: request.term
+                    },
+                    success: function (data) {
+                        response(data);
+                    }
+                });
+            },
+            focus: function (event, ui) {
+                $("#project").val(ui.item.label);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#project").val(ui.item.name);
+                $("#project-id").val(ui.item.email);
+                //$("#project-description").html(ui.item.desc);
+                //$("#project-icon").attr("src", "images/" + ui.item.icon);
+
+                return false;
+            }
+        })
+
+            .data("ui-autocomplete")._renderItem = function (ul, item) {
+                return $("<li>")
+
+                .data("ui-autocomplete-item", item)
+                .append("<a> " + item.name + "<br>" + item.email + "</a>")
+                .appendTo(ul);
+            };
+
+
+        $("#auto").autocomplete({
+            source: function (request, response) {
+                $("#loading").show();
+                console.log(request);
+
+                $.ajax({
+                    url: "http://52.77.213.22:9135/w1/hospitalquery?lquery=" + request.term + "&pageSize=1&limit=10",
+
+                    jsonp: "json",
+                    dataType: "json",
+                    success: function (data) {
+
+                        response($.map(data, function (el, index) {
+                            return el.Hospital_Name + " ( " + el.Location + " )";
+                        }));
+                        $("#loading").hide();
+                    },
+                    error: function () {
+
+
+                        $("#loading").hide();
+                    }
+                });
+            }
+        });
+
+        //$("#auto").autocomplete({
+        //    source: function (request, response) {
+        //        $("#loading").show();
+
+        //        $.ajax({
+        //            url: "http://api.stackoverflow.com/1.1/users",
+        //            data: {
+        //                filter: request.term,
+        //                pagesize: 10
+        //            },
+        //            jsonp: "jsonp",
+        //            dataType: "jsonp",
+        //            success: function (data) {
+        //                debugger;
+        //                response($.map(data.users, function (el, index) {
+        //                    return el.display_name;
+        //                }));
+        //                $("#loading").hide();
+        //            },
+        //            error: function (err) {
+        //                debugger;
+        //                $("#loading").hide();
+        //            }
+        //        });
+        //    }
+        //});
+    });
+</script>

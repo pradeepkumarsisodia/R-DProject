@@ -21,11 +21,11 @@
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Query Builder","Index","QueryBuilder")</li>
+                <ul class="nav navbar-nav">  
+                    <li>@Html.ActionLink("Query Builder", "Index", "QueryBuilder")</li>                
+                    <li>@Html.ActionLink("Graph", "Index", "MyGraphNew")</li>
+                    <li>@Html.ActionLink("Auto Complete", "Index", "MyAutoComplete")</li>
+                    <li>@Html.ActionLink("Timer", "Index", "MyTimer")</li>
                     <li><a href="javascript:void(0)" id="lnkHelp">Help</a></li>
                 </ul>
                 <input type="hidden" id="hdnpagename" value="@ViewBag.hdnpagename" />
