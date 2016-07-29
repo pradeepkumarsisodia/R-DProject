@@ -1,0 +1,5 @@
+D:\Pradeep\R-DProject\Domain\bin\Debug\Domain.dll
+D:\Pradeep\R-DProject\Domain\bin\Debug\Domain.pdb
+D:\Pradeep\R-DProject\Domain\obj\Debug\Domain.csprojResolveAssemblyReference.cache
+D:\Pradeep\R-DProject\Domain\obj\Debug\Domain.dll
+D:\Pradeep\R-DProject\Domain\obj\Debug\Domain.pdb

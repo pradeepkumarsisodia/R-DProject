@@ -73,10 +73,8 @@ namespace MVCWeb.Controllers
                 DataSet ds = new DataSet();
                 da.Fill(ds);
 
-
                 if (ds != null && ds.Tables.Count > 0)
                 {
-
                     var i = 1;
                     foreach (DataTable dt in ds.Tables)
                     {
@@ -125,7 +123,16 @@ namespace MVCWeb.Controllers
                 var childRow = new List<object>();
                 foreach (DataColumn col in table.Columns)
                 {
-                    childRow.Add(row[col]);
+                    if (col.DataType.Name == "DateTime")
+                    {
+                      
+                        childRow.Add( Convert.ToDateTime(row[col]).ToShortDateString());
+                       // childRow.Add(row[col]);
+                    }
+                    else
+                    {
+                        childRow.Add(row[col]);
+                    }
                 }
                 parentRow.Add(childRow);
             }

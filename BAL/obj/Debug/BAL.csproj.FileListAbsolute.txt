@@ -1,0 +1,5 @@
+D:\Pradeep\R-DProject\BAL\bin\Debug\BAL.dll
+D:\Pradeep\R-DProject\BAL\bin\Debug\BAL.pdb
+D:\Pradeep\R-DProject\BAL\obj\Debug\BAL.csprojResolveAssemblyReference.cache
+D:\Pradeep\R-DProject\BAL\obj\Debug\BAL.dll
+D:\Pradeep\R-DProject\BAL\obj\Debug\BAL.pdb
