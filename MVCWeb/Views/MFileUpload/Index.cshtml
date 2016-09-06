@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Multiple File Upload</h2>
+<script type="text/javascript">
+    $(function () {
+        if (window.FileReader != null) {
+            $('#single').hide();
+            $('.single').prop('disabled', true);
+        } else {
+            $('#multiple').hide();
+            $('.multiple').prop('disabled', true);
+        }
+    });
+</script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#btnUploadUsingAjax').click(function () {
+          
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#FileUpload1").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Manas');
+
+                $.ajax({
+                    url: '/MFileUpload/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result.data);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+    });
+</script>
+
+<h1>Using Post</h1>
+@using (Html.BeginForm("Multiple", "MFileUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="multiple">
+        <input type="file" class="multiple" name="files" multiple />
+    </div>
+    <div id="single">
+        <input type="file" class="single" name="files" /><br />
+        <input type="file" class="single" name="files" /><br />
+        <input type="file" class="single" name="files" /><br />
+    </div>
+    @*<button class="btn btn-default">Upload</button>*@
+    <input type="submit" value="Upload" />
+}
+<h1>Using Ajax</h1>
+<div id="multiple">
+  
+    <input type="file" id="FileUpload1" multiple size="50" onchange="myFunction(this)">
+    <p id="demo"></p>
+    <div id="imageContainer">
+
+    </div>
+
+</div>
+<input type="button" value="Upload File Using Ajax" id="btnUploadUsingAjax" />
+
+
+<script>
+
+    function myFunction(input) {
+        $("#imageContainer").empty();
+        var x = document.getElementById("FileUpload1");
+        var txt = "";
+        //var imageid = "";
+        if ('files' in x) {
+            if (x.files.length == 0) {
+                txt = "Select one or more files.";
+            } else {
+                for (var i = 0; i < x.files.length; i++) {
+                   
+                    var imageCtr = '<img id="blah' + i + '" src="#" alt="your image" /> <label id ="imgtxt' + i + '" ></label> </BR >';
+
+                    $("#imageContainer").append(imageCtr);
+
+                    if (x.files && x.files[i]) {
+                        var counter = 0;
+                        var reader = new FileReader();
+                        var file = x.files[i];
+                        reader.fileName = file.name;
+                        reader.fileSize = file.size;
+                        reader.onload = function (e) {
+                            var acounter = counter++;
+                           
+                           
+                            var imageid = '#blah' + acounter;
+                            var imagetext = '#imgtxt' + acounter;
+                          
+                            $(imageid)
+                                .attr('src', e.target.result)
+                                .width(150)
+                                .height(200);
+
+                            $(imagetext).text(e.target.fileName +'- Size :'+ e.target.fileSize);
+                        };
+                        reader.readAsDataURL(input.files[i]);
+                       
+
+                    }
+                   
+                }
+            }
+        }
+        else {
+            if (x.value == "") {
+                txt += "Select one or more files.";
+            } else {
+                txt += "The files property is not supported by your browser!";
+                txt += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead.
+            }
+        }
+        document.getElementById("demo").innerHTML = txt;
+    }
+</script>

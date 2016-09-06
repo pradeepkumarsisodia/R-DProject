@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Script.Serialization;
+using System.Globalization;
 
 namespace MVCWeb.Controllers
 {
@@ -64,42 +65,109 @@ namespace MVCWeb.Controllers
 
         public JsonResult ExecuteQuery(MyClass objClass)
         {
-            var jsonData = "[";
+            var result = new OutputResult();
             try
             {
-                string constr = "Data Source=.;Database=" + objClass.databaseName + ";Integrated Security=SSPI;";
-                SqlConnection con = new SqlConnection(constr);
-                SqlDataAdapter da = new SqlDataAdapter(objClass.query, con);
-                DataSet ds = new DataSet();
-                da.Fill(ds);
+                DateTime a = Convert.ToDateTime("29-08-2016");
 
-                if (ds != null && ds.Tables.Count > 0)
+                var jsonData = string.Empty;
+                var selectQuerys = string.Empty;
+                var exectueNonQueryOutPut = string.Empty;
+                var dataBaseName = objClass.databaseName;
+                string[] querys = objClass.query.Replace("\n", "").Split(';');
+                foreach (var query in querys)
                 {
-                    var i = 1;
-                    foreach (DataTable dt in ds.Tables)
+                    if (query.ToLower().StartsWith("select"))
                     {
-
-                        jsonData += "{";
-                        jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",";
-                        jsonData += "\"columns\":" + GetDataTableColumnsInJSON(dt);
-                        jsonData += ",\"data\":" + GetDataTableDataInJSON(dt);
-                        //jsonData += "\"Details\":" + DataTableToJSON(dt);
-                        if (i < ds.Tables.Count)
-                            jsonData += "},";
-                        else
-                            jsonData += "}";
-                        i++;
+                        selectQuerys += query + " ; ";
+                    }
+                    if (query.ToLower().StartsWith("insert") || query.ToLower().StartsWith("update") || query.ToLower().StartsWith("delete") || query.ToLower().StartsWith("create") || query.ToLower().StartsWith("drop") || query.ToLower().StartsWith("alter"))
+                    {
+                        exectueNonQueryOutPut += ExectueDMLOprations(query, dataBaseName);
                     }
                 }
-                jsonData += "]";
+                if (!string.IsNullOrWhiteSpace(selectQuerys))
+                {
+                    jsonData = ForSelect(selectQuerys, dataBaseName);
+                    result = new OutputResult() { type = "Table", status = "Success", result = jsonData };
+                    //  return Json(jsonData, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    result = new OutputResult() { type = "String", status = "Success", result = exectueNonQueryOutPut };
+                    // return Json(exectueNonQueryOutPut, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public string ForSelect(string Query, string database)
+        {
+            var jsonData = string.Empty;
+            try
+            {
+                string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+                SqlConnection con = new SqlConnection(constr);
+                SqlDataAdapter da = new SqlDataAdapter(Query, con);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                jsonData = CreateJson(ds);
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
+            return jsonData;
+
         }
 
+
+        public string ExectueDMLOprations(string Query, string database)
+        {
+            int rowAffected = 0;
+            string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(Query, connection);
+                command.Connection.Open();
+                rowAffected = command.ExecuteNonQuery();
+            }
+
+            return "Row Affected " + rowAffected + "; <Br />";
+        }
+
+        public string CreateJson(DataSet ds)
+        {
+            var jsonData = "[";
+            if (ds != null && ds.Tables.Count > 0)
+            {
+                var i = 1;
+                foreach (DataTable dt in ds.Tables)
+                {
+
+                    jsonData += "{";
+                    jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",";
+                    jsonData += "\"columns\":" + GetDataTableColumnsInJSON(dt);
+                    jsonData += ",\"data\":" + GetDataTableDataInJSON(dt);
+                    //jsonData += "\"Details\":" + DataTableToJSON(dt);
+                    if (i < ds.Tables.Count)
+                        jsonData += "},";
+                    else
+                        jsonData += "}";
+                    i++;
+                }
+            }
+            jsonData += "]";
+            return jsonData;
+        }
         public string GetDataTableColumnsInJSON(DataTable table)
         {
             JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
@@ -125,9 +193,9 @@ namespace MVCWeb.Controllers
                 {
                     if (col.DataType.Name == "DateTime")
                     {
-                      
-                        childRow.Add( Convert.ToDateTime(row[col]).ToShortDateString());
-                       // childRow.Add(row[col]);
+
+                        childRow.Add(Convert.ToDateTime(row[col]).ToShortDateString());
+                        // childRow.Add(row[col]);
                     }
                     else
                     {
@@ -146,5 +214,13 @@ namespace MVCWeb.Controllers
     {
         public string databaseName { get; set; }
         public string query { get; set; }
+    }
+
+    public class OutputResult
+    {
+        public string errorMessage { get; set; }
+        public string status { get; set; }
+        public string type { get; set; }
+        public string result { get; set; }
     }
 }

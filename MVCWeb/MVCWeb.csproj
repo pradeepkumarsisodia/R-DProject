@@ -165,6 +165,7 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MFileUploadController.cs" />
     <Compile Include="Controllers\MyAutoCompleteController.cs" />
     <Compile Include="Controllers\MyGraphController.cs" />
     <Compile Include="Controllers\MyGraphNewController.cs" />
@@ -201,6 +202,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\webcomponents-lite.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Help.html" />
     <Content Include="Web.config" />
@@ -248,9 +250,11 @@
     <Content Include="Views\QueryBuilder\Index.cshtml" />
     <Content Include="Views\MyAutoComplete\Index.cshtml" />
     <Content Include="Views\MyTimer\Index.cshtml" />
+    <Content Include="Views\MFileUpload\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="uploads\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

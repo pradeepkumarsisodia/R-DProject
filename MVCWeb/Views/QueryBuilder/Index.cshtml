@@ -54,7 +54,6 @@
     });
 
     $('#myButton').on('click', function () {
-        debugger;
 
         var $btn = $(this).button('loading');
 
@@ -71,7 +70,7 @@
     var start;
     var end;
     $(function () {
-       
+
         //var dataObject = eval('[{"COLUMNS":[{ "title": "NAME"}, { "title": "COUNTY"}],"DATA":[["John Doe","Fresno"],["Billy","Fresno"],["Tom","Kern"],["King Smith","Kings"]]}]');
         //var columns = [];
         //$('#example').dataTable({
@@ -81,26 +80,24 @@
 
 
         $('#btnExecute').click(function () {
-                
             if ($('#txtQuery').val() == '') {
                 return;
             }
             var selectedQuery = wrapText("txtQuery");
-           
-          // $('#btnExecute').button('loading');
-         //   var $btn = $('#btnExecute');
-            debugger;
+
+            // $('#btnExecute').button('loading');
+            //   var $btn = $('#btnExecute');
             var Data1 = {
                 databaseName: $('#ddlDataBase').val(),
                 query: selectedQuery
             };
             callajax(Data1);
-           
+
             //$('#btnExecute').button('reset');
-           // alert('Complete');
+            // alert('Complete');
         });
 
-       
+
 
         $("#txtQuery").on("keydown", function (event) {
             if (event.which == 120) {
@@ -131,7 +128,7 @@
 
     }
     function callajax(data1) {
-    
+
         $.ajax({
             type: "GET", 		//GET or POST or PUT or DELETE verb
             url: "/QueryBuilder/ExecuteQuery", 		// Location of the service
@@ -144,14 +141,22 @@
                 $('#btnExecute').button('loading');
             },
             success: function (json) {//On Successful service call
-                debugger;
-                CreateTable(JSON.parse(json));
+                if (json.errorMessage == null || json.errorMessage == "") {
+                    $("#tabContainer").html('');
+                    if (json.type == 'Table') {
+                        CreateTable(JSON.parse(json.result));
+                    }
+                    if (json.type == 'String') {
+                        $("#tabContainer").html(json.result);
+                        //alert();
+                    }
+                }
+                // CreateTable(JSON.parrse(json));
                 //setTimeout( )
                 $('#btnExecute').button('reset');
                 $("#txtQuery")[0].setSelectionRange(start, end);
             },
             error: function (err) {
-                debugger;
                 $('#btnExecute').button('reset');
             },
         });
@@ -159,14 +164,12 @@
 
 
     function CreateTable(data) {
-        debugger;
         //create tabs
         $("#tabContainer").html('');
         for (var i = 0; i < data.length; i++) {
 
             //create table inside tab
             $("#tabContainer").append('<table cellpadding="0" cellspacing="0" border="0" class="display" id="' + data[i].tableName + '"></table><br /><br />');
-
             //bind table
             var dataObject = data[i];
             $('#' + dataObject.tableName).dataTable({
