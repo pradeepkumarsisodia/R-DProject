@@ -74,19 +74,15 @@
 }
 <h1>Using Ajax</h1>
 <div id="multiple">
-  
     <input type="file" id="FileUpload1" multiple size="50" onchange="myFunction(this)">
     <p id="demo"></p>
     <div id="imageContainer">
-
     </div>
-
 </div>
 <input type="button" value="Upload File Using Ajax" id="btnUploadUsingAjax" />
 
 
 <script>
-
     function myFunction(input) {
         $("#imageContainer").empty();
         var x = document.getElementById("FileUpload1");
@@ -97,9 +93,7 @@
                 txt = "Select one or more files.";
             } else {
                 for (var i = 0; i < x.files.length; i++) {
-                   
-                    var imageCtr = '<img id="blah' + i + '" src="#" alt="your image" /> <label id ="imgtxt' + i + '" ></label> </BR >';
-
+                    var imageCtr = '<img id="blah' + i + '" src="#" alt="your image"  /> <label id ="imgtxt' + i + '" ></label> </BR ></BR >';
                     $("#imageContainer").append(imageCtr);
 
                     if (x.files && x.files[i]) {
@@ -110,23 +104,16 @@
                         reader.fileSize = file.size;
                         reader.onload = function (e) {
                             var acounter = counter++;
-                           
-                           
                             var imageid = '#blah' + acounter;
                             var imagetext = '#imgtxt' + acounter;
-                          
                             $(imageid)
                                 .attr('src', e.target.result)
-                                .width(150)
-                                .height(200);
-
+                                .width(100)
+                                .height(100);
                             $(imagetext).text(e.target.fileName +'- Size :'+ e.target.fileSize);
                         };
                         reader.readAsDataURL(input.files[i]);
-                       
-
                     }
-                   
                 }
             }
         }

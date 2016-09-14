@@ -172,6 +172,7 @@
     <Compile Include="Controllers\MyTimerController.cs" />
     <Compile Include="Controllers\QueryBuilderController.cs" />
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -205,6 +206,7 @@
     <Content Include="Scripts\webcomponents-lite.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Help.html" />
+    <Content Include="Videos\Sample1.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -251,6 +253,8 @@
     <Content Include="Views\MyAutoComplete\Index.cshtml" />
     <Content Include="Views\MyTimer\Index.cshtml" />
     <Content Include="Views\MFileUpload\Index.cshtml" />
+    <Content Include="Views\Video\Index.cshtml" />
+    <Content Include="Scripts\jquery.youtubepopup.min.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
