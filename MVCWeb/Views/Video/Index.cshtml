@@ -5,8 +5,7 @@
 
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-<div id='fileNames'> </div>
-<img src= "@Url.Content("~/Images/loader.gif")" />
+
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -18,13 +17,20 @@
                 <h4 class="modal-title">Modal Header</h4>
             </div>
             <div class="modal-body">
-                <video width="320" height="240" controls ="controls" >
-                    <source src="~/Videos/Sample1.mp4" type="video/mp4" />
+                <video width="320" height="240" controls>
+                    <source src="/Videos/Sample1.mp4" type="video/mp4" />
                 </video>
-               
-            </div>
+                <br />
+                <br />
+                <div>
 
-           
+                    <a href="javascript:void(0)"><img id="img1"  src="~/Images/Image1.jpg" style="width:50px; height:50px" /></a>
+                    <a href="javascript:void(0)"><img id="img2"  src="~/Images/Image2.jpg" style="width:50px; height:50px" /></a>
+                    <a href="javascript:void(0)"><img id="img3" src="~/Images/Image3.jpg" style="width:50px; height:50px" /></a>
+                    <a href="javascript:void(0)"><img id="img4"  src="~/Images/Image4.jpg" style="width:50px; height:50px" /></a>
+                </div>
+
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
@@ -32,30 +38,95 @@
 
     </div>
 </div>
+<div id="myModal1" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <a href="javascript:void(0)"> <img id="img1" class="mySlides" src="~/Images/Image1.jpg" height="500px" width="500px" /></a>
+                <a href="javascript:void(0)"> <img id="img2" class="mySlides" src="~/Images/Image2.jpg" height="500px" width="500px" /></a>
+                <a href="javascript:void(0)"> <img id="img3" class="mySlides" src="~/Images/Image3.jpg" height="500px" width="500px" /></a>
+                <a href="javascript:void(0)"> <img id="img4" class="mySlides" src="~/Images/Image4.jpg" height="500px" width="500px" /></a>
+
+
+                <button class="w3-btn" onclick="plusDivs(-1)">&#10094; Prev</button>
+                <button class="w3-btn" onclick="plusDivs(1)">Next &#10095;</button>
+                @*<img id="imgShow" style="width:500px; height:400px" />*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("body").on("keydown", function (event) {
+          
+            if (event.which == 113) {
+                $('#myModal').modal().show();
+                //alert(event.type + ": " + event.which);
+            }
+        });
+        $('a img').click(function () {
+            $("#imgShow").attr("src",  $(this).attr('src'));
+            $('#myModal1').modal().show();
+        });
+        //$('#aOpenImages').click(function () {
+
+        //    $('#myModal1').modal().show();
+        //});
+    });
+
+</script>
+<script type="text/javascript">
+    var slideIndex = 1;
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+        debugger;
+        showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        if (n > x.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = x.length };
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        x[slideIndex - 1].style.display = "block";
+    }
+
+
+</script>
 
 @*<script type="text/javascript">
-    $(document).ready(function(){
-        debugger;
-        var fileExt = {};
-        fileExt[0]=".png";
-        fileExt[1]=".jpg";
-        fileExt[2]=".gif";
-        $.ajax({
-            //This will retrieve the contents of the folder if the folder is configured as 'browsable'
-            url:  '../Images/',
-            success: function (data) {
-                debugger;
-                $("#fileNames").html('<ul>');
-                //List all png or jpg or gif file names in the page
-                $(data).find('a:contains(" + fileExt[0] + "),a:contains(" + fileExt[1] + "),a:contains(" + fileExt[2] + ")').each(function () {
-                    var filename = this.href.replace(window.location.host, "").replace("http:///", "");
-                  //  $("#fileNames").append( '<li>'+filename+<'/li'>);
-                });
-                $("#fileNames").append('</ul>');
-            }     
+        $(document).ready(function(){
+            debugger;
+            var fileExt = {};
+            fileExt[0]=".png";
+            fileExt[1]=".jpg";
+            fileExt[2]=".gif";
+            $.ajax({
+                //This will retrieve the contents of the folder if the folder is configured as 'browsable'
+                url:  '../Images/',
+                success: function (data) {
+                    debugger;
+                    $("#fileNames").html('<ul>');
+                    //List all png or jpg or gif file names in the page
+                    $(data).find('a:contains(" + fileExt[0] + "),a:contains(" + fileExt[1] + "),a:contains(" + fileExt[2] + ")').each(function () {
+                        var filename = this.href.replace(window.location.host, "").replace("http:///", "");
+                      //  $("#fileNames").append( '<li>'+filename+<'/li'>);
+                    });
+                    $("#fileNames").append('</ul>');
+                }
+            });
         });
-    });
-</script>*@
+    </script>*@
 @*<html>
     <head>
         <title> Youtube Popup</title>
