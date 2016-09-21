@@ -5,7 +5,10 @@
 
 <!-- Trigger the modal with a button -->
 <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
+<video id="myVideoTag" width="320" height="240" controls>
+   
+</video>
+<input type="button" id="btnPlayVideo" value="Play Video" />
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -20,6 +23,8 @@
                 <video width="320" height="240" controls>
                     <source src="/Videos/Sample1.mp4" type="video/mp4" />
                 </video>
+
+               
                 <br />
                 <br />
                 <div>
@@ -78,6 +83,16 @@
 
         //    $('#myModal1').modal().show();
         //});
+
+        var video = document.getElementById('myVideoTag');
+        var source = document.createElement('source');
+        source.setAttribute('src', '/Videos/Sample1.mp4')
+        video.appendChild(source);
+        $('#btnPlayVideo').click(function () {
+        
+            video.play();
+          
+        });
     });
 
 </script>
