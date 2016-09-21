@@ -164,6 +164,7 @@
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ImageUploadInDbController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MFileUploadController.cs" />
     <Compile Include="Controllers\MyAutoCompleteController.cs" />
@@ -283,6 +284,7 @@
     <Content Include="Views\MFileUpload\Index.cshtml" />
     <Content Include="Views\Video\Index.cshtml" />
     <Content Include="Scripts\jquery.youtubepopup.min.js" />
+    <Content Include="Views\ImageUploadInDb\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

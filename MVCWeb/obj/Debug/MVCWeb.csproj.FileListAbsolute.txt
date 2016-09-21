@@ -50,6 +50,6 @@ D:\Pradeep\R-DProject\MVCWeb\bin\Microsoft.Owin.Security.OAuth.xml
 D:\Pradeep\R-DProject\MVCWeb\bin\Microsoft.Owin.Security.Google.xml
 D:\Pradeep\R-DProject\MVCWeb\bin\Microsoft.Owin.Security.Twitter.xml
 D:\Pradeep\R-DProject\MVCWeb\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-D:\Pradeep\R-DProject\MVCWeb\obj\Debug\MVCWeb.csprojResolveAssemblyReference.cache
 D:\Pradeep\R-DProject\MVCWeb\obj\Debug\MVCWeb.dll
 D:\Pradeep\R-DProject\MVCWeb\obj\Debug\MVCWeb.pdb
+D:\Pradeep\R-DProject\MVCWeb\obj\Debug\MVCWeb.csprojResolveAssemblyReference.cache

@@ -7,62 +7,20 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Script.Serialization;
 using System.Globalization;
+using System.Configuration;
 
 namespace MVCWeb.Controllers
 {
     public class QueryBuilderController : Controller
     {
         // GET: QueryBuilder
+
+        string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
         public ActionResult Index()
         {
             ViewBag.hdnpagename = "queryBuilder";
             return View();
         }
-
-        //public JsonResult ExecuteQuery(MyClass objClass)
-        //{
-        //    string constr = "Data Source=.;Database=" + objClass.databaseName + ";Integrated Security=SSPI;";
-        //    SqlConnection con = new SqlConnection(constr);
-        //    SqlDataAdapter da = new SqlDataAdapter(objClass.query, con);
-        //    DataSet ds = new DataSet();
-        //    da.Fill(ds);
-
-        //    var jsonData = "[";
-        //    if (ds != null && ds.Tables.Count > 0)
-        //    {
-        //        var i = 1;
-        //        foreach (DataTable dt in ds.Tables)
-        //        {
-        //            jsonData += "{";
-        //            jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",\"Details\":";
-        //            jsonData += DataTableToJSON(dt);
-        //            if (i < ds.Tables.Count)
-        //                jsonData += "},";
-        //            else
-        //                jsonData += "}";
-        //            i++;
-        //        }
-        //    }
-        //    jsonData += "]";
-        //    return Json(jsonData, JsonRequestBehavior.AllowGet);
-        //}
-
-        //public string DataTableToJSON(DataTable table)
-        //{
-        //    JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
-        //    List<Dictionary<string, object>> parentRow = new List<Dictionary<string, object>>();
-        //    Dictionary<string, object> childRow;
-        //    foreach (DataRow row in table.Rows)
-        //    {
-        //        childRow = new Dictionary<string, object>();
-        //        foreach (DataColumn col in table.Columns)
-        //        {
-        //            childRow.Add(col.ColumnName, row[col]);
-        //        }
-        //        parentRow.Add(childRow);
-        //    }
-        //    return jsSerializer.Serialize(parentRow);
-        //}
 
         public JsonResult ExecuteQuery(MyClass objClass)
         {
@@ -119,13 +77,9 @@ namespace MVCWeb.Controllers
             try
             {
                 //string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
-                //SqlConnection con = new SqlConnection(constr);
-                //SqlDataAdapter da = new SqlDataAdapter(Query, con);
-                //DataSet ds = new DataSet();
-                //da.Fill(ds);
-                //jsonData = CreateJson(ds);
-                string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
-                SqlConnection con = new SqlConnection(constr);
+          
+               // string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
+                SqlConnection con = new SqlConnection(connectionString);
                 SqlDataAdapter da = new SqlDataAdapter(Query, con);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -144,7 +98,7 @@ namespace MVCWeb.Controllers
         public string ExectueDMLOprations(string Query, string database)
         {
             int rowAffected = 0;
-            string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+           // string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(Query, connection);

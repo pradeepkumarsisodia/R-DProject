@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#btnUploadUsingAjax').click(function () {
+
+            // Checking whether FormData is available in browser
+            if (window.FormData !== undefined) {
+
+                var fileUpload = $("#FileUpload1").get(0);
+                var files = fileUpload.files;
+
+                // Create FormData object
+                var fileData = new FormData();
+
+                // Looping over all files and add it to FormData object
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+
+                // Adding one more key to FormData object
+                fileData.append('username', 'Manas');
+
+                $.ajax({
+                    url: '/ImageUploadInDb/UploadFiles',
+                    type: "POST",
+                    contentType: false, // Not to set any content header
+                    processData: false, // Not to process data
+                    data: fileData,
+                    success: function (result) {
+                        alert(result.data);
+                    },
+                    error: function (err) {
+                        alert(err.statusText);
+                    }
+                });
+            } else {
+                alert("FormData is not supported.");
+            }
+        });
+    });
+</script>
+
+<br />
+<br />
+<br />
+<br />
+<h1>Using Ajax</h1>
+<div id="multiple">
+    <input type="file" id="FileUpload1" multiple size="50" onchange="myFunction(this)">
+    <p id="demo"></p>
+    <div id="imageContainer">
+    </div>
+</div>
+<input type="button" value="Upload File Using Ajax" id="btnUploadUsingAjax" />
+<script>
+    function myFunction(input) {
+        $("#imageContainer").empty();
+        var x = document.getElementById("FileUpload1");
+        var txt = "";
+        //var imageid = "";
+        if ('files' in x) {
+            if (x.files.length == 0) {
+                txt = "Select one or more files.";
+            } else {
+                for (var i = 0; i < x.files.length; i++) {
+                    var imageCtr = '<img id="blah' + i + '" src="#" alt="your image"  /> <label id ="imgtxt' + i + '" ></label> </BR ></BR >';
+                    $("#imageContainer").append(imageCtr);
+
+                    if (x.files && x.files[i]) {
+                        var counter = 0;
+                        var reader = new FileReader();
+                        var file = x.files[i];
+                        reader.fileName = file.name;
+                        reader.fileSize = file.size;
+                        reader.onload = function (e) {
+                            var acounter = counter++;
+                            var imageid = '#blah' + acounter;
+                            var imagetext = '#imgtxt' + acounter;
+                            $(imageid)
+                                .attr('src', e.target.result)
+                                .width(100)
+                                .height(100);
+                            $(imagetext).text(e.target.fileName + '- Size :' + e.target.fileSize);
+                        };
+                        reader.readAsDataURL(input.files[i]);
+                    }
+                }
+            }
+        }
+        else {
+            if (x.value == "") {
+                txt += "Select one or more files.";
+            } else {
+                txt += "The files property is not supported by your browser!";
+                txt += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead.
+            }
+        }
+        document.getElementById("demo").innerHTML = txt;
+    }
+</script>
+
