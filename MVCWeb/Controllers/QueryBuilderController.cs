@@ -15,7 +15,7 @@ namespace MVCWeb.Controllers
     {
         // GET: QueryBuilder
 
-        string connectionString = ConfigurationManager.AppSettings["ConnectionString"];
+        readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
         public ActionResult Index()
         {
             ViewBag.hdnpagename = "queryBuilder";
@@ -24,15 +24,13 @@ namespace MVCWeb.Controllers
 
         public JsonResult ExecuteQuery(MyClass objClass)
         {
-            var result = new OutputResult();
+            OutputResult result;
             try
             {
-
-                var jsonData = string.Empty;
                 var selectQuerys = string.Empty;
                 var exectueNonQueryOutPut = string.Empty;
-                var dataBaseName = objClass.databaseName;
-                string[] querys = objClass.query.Replace("\n", "").Split(';');
+                var dataBaseName = objClass.DatabaseName;
+                string[] querys = objClass.Query.Replace("\n", "").Split(';');
                 foreach (var query in querys)
                 {
                     if (query.ToLower().StartsWith("select"))
@@ -41,12 +39,12 @@ namespace MVCWeb.Controllers
                     }
                     if (query.ToLower().StartsWith("insert") || query.ToLower().StartsWith("update") || query.ToLower().StartsWith("delete") || query.ToLower().StartsWith("create") || query.ToLower().StartsWith("drop") || query.ToLower().StartsWith("alter"))
                     {
-                        exectueNonQueryOutPut += ExectueDMLOprations(query, dataBaseName);
+                        exectueNonQueryOutPut += ExectueDmlOprations(query, dataBaseName);
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(selectQuerys))
                 {
-                    jsonData = ForSelect(selectQuerys, dataBaseName);
+                    var jsonData = ForSelect(selectQuerys, dataBaseName);
                     result = new OutputResult() { type = "Table", status = "Success", result = jsonData };
                     //  return Json(jsonData, JsonRequestBehavior.AllowGet);
                 }
@@ -73,13 +71,13 @@ namespace MVCWeb.Controllers
 
         public string ForSelect(string Query, string database)
         {
-            var jsonData = string.Empty;
+            string jsonData;
             try
             {
                 //string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
           
                // string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
-                SqlConnection con = new SqlConnection(connectionString);
+                SqlConnection con = new SqlConnection(_connectionString);
                 SqlDataAdapter da = new SqlDataAdapter(Query, con);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
@@ -95,11 +93,11 @@ namespace MVCWeb.Controllers
         }
 
 
-        public string ExectueDMLOprations(string Query, string database)
+        public string ExectueDmlOprations(string Query, string database)
         {
             int rowAffected = 0;
            // string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(Query, connection);
                 command.Connection.Open();
@@ -140,8 +138,7 @@ namespace MVCWeb.Controllers
 
             foreach (DataColumn col in table.Columns)
             {
-                var childRow = new Dictionary<string, string>();
-                childRow.Add("title", col.ColumnName);
+                var childRow = new Dictionary<string, string> {{"title", col.ColumnName}};
                 parentRow.Add(childRow);
             }
             return jsSerializer.Serialize(parentRow);
@@ -177,8 +174,8 @@ namespace MVCWeb.Controllers
 
     public class MyClass
     {
-        public string databaseName { get; set; }
-        public string query { get; set; }
+        public string DatabaseName { get; set; }
+        public string Query { get; set; }
     }
 
     public class OutputResult
