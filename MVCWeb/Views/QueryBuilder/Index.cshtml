@@ -141,6 +141,7 @@
                 $('#btnExecute').button('loading');
             },
             success: function (json) {//On Successful service call
+
                 if (json.errorMessage == null || json.errorMessage == "") {
                     $("#tabContainer").html('');
                     if (json.type == 'Table') {
@@ -150,6 +151,10 @@
                         $("#tabContainer").html(json.result);
                         //alert();
                     }
+                }
+                else {
+                    $("#tabContainer").html(json.errorMessage);
+                    alert(json.errorMessage);
                 }
                 // CreateTable(JSON.parrse(json));
                 //setTimeout( )

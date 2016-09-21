@@ -15,6 +15,7 @@ namespace MVCWeb.Controllers
         // GET: QueryBuilder
         public ActionResult Index()
         {
+            ViewBag.hdnpagename = "queryBuilder";
             return View();
         }
 
@@ -68,7 +69,6 @@ namespace MVCWeb.Controllers
             var result = new OutputResult();
             try
             {
-                DateTime a = Convert.ToDateTime("29-08-2016");
 
                 var jsonData = string.Empty;
                 var selectQuerys = string.Empty;
@@ -92,18 +92,23 @@ namespace MVCWeb.Controllers
                     result = new OutputResult() { type = "Table", status = "Success", result = jsonData };
                     //  return Json(jsonData, JsonRequestBehavior.AllowGet);
                 }
-                else
+                else if (!string.IsNullOrWhiteSpace(exectueNonQueryOutPut))
                 {
                     result = new OutputResult() { type = "String", status = "Success", result = exectueNonQueryOutPut };
                     // return Json(exectueNonQueryOutPut, JsonRequestBehavior.AllowGet);
                 }
+                else
+                {
+                    result = new OutputResult() { type = "String", status = "Error", errorMessage = "Invalid Query" };
+                }
 
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                result = new OutputResult() { type = "Table", status = "Error", errorMessage= ex.Message, result = "" };
+               // var jdata = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue };
+               // result = jdata.Deserialize<OutputResult>(result);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -113,7 +118,13 @@ namespace MVCWeb.Controllers
             var jsonData = string.Empty;
             try
             {
-                string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+                //string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+                //SqlConnection con = new SqlConnection(constr);
+                //SqlDataAdapter da = new SqlDataAdapter(Query, con);
+                //DataSet ds = new DataSet();
+                //da.Fill(ds);
+                //jsonData = CreateJson(ds);
+                string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
                 SqlConnection con = new SqlConnection(constr);
                 SqlDataAdapter da = new SqlDataAdapter(Query, con);
                 DataSet ds = new DataSet();
@@ -123,7 +134,7 @@ namespace MVCWeb.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                throw ex;
             }
             return jsonData;
 
