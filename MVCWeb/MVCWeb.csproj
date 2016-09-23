@@ -235,6 +235,22 @@
     <Content Include="Scripts\webcomponents-lite.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Help.html" />
+    <Content Include="uploads\029722d3-afa9-41dd-85b4-13776e98739a.jpg" />
+    <Content Include="uploads\16c7c9cb-4513-4090-a2a6-c5cf7a0cc9fe.jpg" />
+    <Content Include="uploads\1a917e92-82b9-4188-b393-53a513225f83.jpg" />
+    <Content Include="uploads\2a60909e-2b42-4686-bdf2-27c63b607cf7.jpg" />
+    <Content Include="uploads\3716b95d-69c6-4c9d-9411-43c04e714091.JPG" />
+    <Content Include="uploads\5a0a697a-0653-4cd8-9c87-b666af5dc526.jpg" />
+    <Content Include="uploads\617e4891-2a2d-4843-894a-a7d70824556c.jpg" />
+    <Content Include="uploads\6568982c-10fd-4114-b3e4-2a488f6af350.jpg" />
+    <Content Include="uploads\6c4d40fc-20ae-4bab-a952-41fb39c8b3e0.jpg" />
+    <Content Include="uploads\71f0e842-bd53-4d88-867a-e7779da5b3e0.JPG" />
+    <Content Include="uploads\87a8207b-9d5a-4c53-9318-22dca125046d.jpg" />
+    <Content Include="uploads\8dd3863d-192c-473e-afb5-edf4b98447b8.jpg" />
+    <Content Include="uploads\a5a5b00f-af4e-42f4-813c-bcc09cb9591e.jpg" />
+    <Content Include="uploads\dcda832e-b729-4fdb-8f75-ce954355b6bb.jpg" />
+    <Content Include="uploads\e7d4d3d0-adce-476a-aa4f-4426704f6149.jpg" />
+    <Content Include="uploads\ecd9ddf7-3ef9-402b-b0ff-3fa194936a19.jpg" />
     <Content Include="Videos\Sample1.mp4" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -288,7 +304,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="uploads\" />
     <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>

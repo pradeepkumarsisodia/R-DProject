@@ -1,11 +1,11 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script type="text/javascript">
-
+    var imageCollection = new Array();
     $(document).ready(function () {
+        showImage();
         $('#btnUploadUsingAjax').click(function () {
 
             // Checking whether FormData is available in browser
@@ -42,14 +42,61 @@
                 alert("FormData is not supported.");
             }
         });
+
+        $('.mySlidesold').click(function () {
+            $("#imgShow").attr("src", $(this).attr('src'));
+            $('#myModal1').modal().show();
+        });
     });
+
+    function showImage() {
+        var imageString = "87a8207b-9d5a-4c53-9318-22dca125046d.jpg,e7d4d3d0-adce-476a-aa4f-4426704f6149.jpg,dcda832e-b729-4fdb-8f75-ce954355b6bb.jpg,16c7c9cb-4513-4090-a2a6-c5cf7a0cc9fe.jpg,";
+        imageCollection = imageString.split(",");
+        $.each(imageCollection, function (index, value) {
+            if (value != "") {
+                //var imageCtr = '<img id="sdb' + index + '" src="/uploads/' + value + '" class="mySlidesold" alt="your image" width="100px" height="100px"  /> <label id ="imgtxt' + index + '" >' + value + ' </label> </BR ></BR >';
+                var imageCtr = '<img id="sdb' + index + '" src="/uploads/' + value + '" class="mySlidesold" alt="your image" width="100px" height="100px"  /> &nbsp;';
+                $("#showDbImages").append(imageCtr);
+            }
+        });
+    }
 </script>
 
+<script type="text/javascript">
+    function plusDivs(n) {
+        var imagename = $("#imgShow").attr("src").replace('/uploads/', '');
+        var index = imageCollection.indexOf(imagename);
+        var newIndex = index += n;
+        if (newIndex >= 0 && newIndex < imageCollection.length) {
+            if (imageCollection[newIndex] != "") {
+                $("#imgShow").attr("src", "/uploads/" + imageCollection[newIndex]);
+            }
+        }
+    }
+</script>
 <br />
 <br />
 <br />
-<br />
+&nbsp;
 <h1>Using Ajax</h1>
+<div id="showDbImages">
+</div>
+<div id="myModal1" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-body">
+                <img id="imgShow" height="500" width="500" />
+                <button class="w3-btn" onclick="plusDivs(-1)">&#10094; Prev</button>
+                <button class="w3-btn" onclick="plusDivs(1)">Next &#10095;</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="multiple">
     <input type="file" id="FileUpload1" multiple size="50" onchange="myFunction(this)">
     <p id="demo"></p>

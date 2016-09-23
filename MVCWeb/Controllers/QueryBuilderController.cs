@@ -14,7 +14,6 @@ namespace MVCWeb.Controllers
     public class QueryBuilderController : Controller
     {
         // GET: QueryBuilder
-
         readonly string _connectionString = ConfigurationManager.AppSettings["ConnectionString"];
         public ActionResult Index()
         {
@@ -57,14 +56,12 @@ namespace MVCWeb.Controllers
                 {
                     result = new OutputResult() { type = "String", status = "Error", errorMessage = "Invalid Query" };
                 }
-
-
             }
             catch (Exception ex)
             {
-                result = new OutputResult() { type = "Table", status = "Error", errorMessage= ex.Message, result = "" };
-               // var jdata = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue };
-               // result = jdata.Deserialize<OutputResult>(result);
+                result = new OutputResult() { type = "Table", status = "Error", errorMessage = ex.Message, result = "" };
+                // var jdata = new JavaScriptSerializer { MaxJsonLength = Int32.MaxValue };
+                // result = jdata.Deserialize<OutputResult>(result);
             }
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -75,35 +72,31 @@ namespace MVCWeb.Controllers
             try
             {
                 //string constr = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
-          
-               // string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
+                // string constr = "Data Source=182.50.133.109;Database=RHOK; User id=rhok;Password=rhok@123;";
                 SqlConnection con = new SqlConnection(_connectionString);
                 SqlDataAdapter da = new SqlDataAdapter(Query, con);
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 jsonData = CreateJson(ds);
-
             }
             catch (Exception ex)
             {
                 throw ex;
             }
             return jsonData;
-
         }
 
 
         public string ExectueDmlOprations(string Query, string database)
         {
             int rowAffected = 0;
-           // string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
+            // string connectionString = "Data Source=.;Database=" + database + ";Integrated Security=SSPI;";
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(Query, connection);
                 command.Connection.Open();
                 rowAffected = command.ExecuteNonQuery();
             }
-
             return "Row Affected " + rowAffected + "; <Br />";
         }
 
@@ -115,7 +108,6 @@ namespace MVCWeb.Controllers
                 var i = 1;
                 foreach (DataTable dt in ds.Tables)
                 {
-
                     jsonData += "{";
                     jsonData += "\"tableName\": \"" + dt.TableName + "\",\"TotalRecords\": " + dt.Rows.Count + ",";
                     jsonData += "\"columns\":" + GetDataTableColumnsInJSON(dt);
@@ -138,7 +130,7 @@ namespace MVCWeb.Controllers
 
             foreach (DataColumn col in table.Columns)
             {
-                var childRow = new Dictionary<string, string> {{"title", col.ColumnName}};
+                var childRow = new Dictionary<string, string> { { "title", col.ColumnName } };
                 parentRow.Add(childRow);
             }
             return jsSerializer.Serialize(parentRow);
@@ -155,7 +147,6 @@ namespace MVCWeb.Controllers
                 {
                     if (col.DataType.Name == "DateTime")
                     {
-
                         childRow.Add(Convert.ToDateTime(row[col]).ToShortDateString());
                         // childRow.Add(row[col]);
                     }
@@ -168,8 +159,6 @@ namespace MVCWeb.Controllers
             }
             return jsSerializer.Serialize(parentRow);
         }
-
-
     }
 
     public class MyClass
