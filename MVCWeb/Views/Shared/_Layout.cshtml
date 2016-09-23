@@ -83,8 +83,13 @@
             //$('#hdnpagename').val('testing');
             //var url = "/Help.html?pageId=" + $('#hdnpagename').val();
             //window.open(url);
-            $('.' + $('#hdnpagename').val()).css("display", "block");
-            $('#myModal').modal().show();
+            if ($('#hdnpagename').val() != "") {
+                $('.' + $('#hdnpagename').val()).css("display", "block");
+                $('#myModal').modal().show();
+            }
+            else {
+                alert('No help for this page.');
+            }
         });
     });
 
