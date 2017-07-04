@@ -1,0 +1,11 @@
+function checkFileIsValid(sender) {
+        var validExts = new Array(".xlsx", ".xls", ".pdf");
+        var fileExt = sender.value;
+        fileExt = fileExt.substring(fileExt.lastIndexOf('.'));
+        if (validExts.indexOf(fileExt) < 0) {
+            $("#formName").val("");
+            return false;
+        } else {
+            return true;
+        }
+    }
