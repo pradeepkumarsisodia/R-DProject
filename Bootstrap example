@@ -1,0 +1,31 @@
+__________________________________________________________
+<div class="container-fluid">
+    <section class="card">
+        <div class="card-block">
+            <h5 class="with-border m-t-0">Team Goal</h5>
+            <div>
+                <button type="button" class="btn btn-success" onclick="openPopupManageGoal()">Add Goal</button>
+            </div>
+            @*<div class="text-right" style="margin-bottom:10px">
+                    <button type="button" class="btn btn-success" onclick="openPopupManageGoal()">Add Goal</button>
+                </div>*@
+            <div role="tabpanel" class="tab-pane margin-top-10">
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Select employee to view goal</label>
+                        <select id="ddlEmployee" class="form-control select2 select2-hidden-accessible validation-required" onchange="loadGoalGrid(0);" placeholder="Select employees to view goals" aria-hidden="true">
+                            <option value="0">Select</option>
+                        </select>
+                    </div>
+                </div>
+                <section>
+                    <div class="row form-body">
+                        <div class="col-md-12 clearfix">
+                            <table id="tblSelfGoalList" class="table table-bordered table-hover display table-striped" role="grid" aria-describedby="example1-info"></table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+</div>
